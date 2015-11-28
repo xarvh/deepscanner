@@ -29,28 +29,24 @@ static unsigned mainPSize = 100;
  */
 void colorScale1StZero(double k, double* r, double* g, double* b)
 {
- *r = 3.8*k-2.80;		//k + .5;
- *g =  .7*k+ .30;		//k*3 - 1.5;
- *b = 2.5*k-1.25;		//k*4 - 3.0;
+ *r = k + .5;
+ *g = k*3 - 1.5;
+ *b = k*4 - 3.0;
 }
 
 void colorScale2NdZero(double k, double* r, double* g, double* b)
 {
- *r = 1;			//k*k;
- *g = .35 + .45*k*k;		//k;
- *b = .35 + .45*k*k;		//.5 + k*2;
+ *r = k*k;
+ *g = k;
+ *b = .5 + k*2;
 }
 
 
 void colorScale3RdZero(double k, double* r, double* g, double* b)
 {
- *r = .15 + .15*k*k;
- *g = .35 + .45*k*k;
+ *r = k;
+ *g = k*k;
  *b = 1;
-
-// *r = k;
-// *g = k*k;
-// *b = 1;
 }
 
 int colorScaleBoundary(double v)
