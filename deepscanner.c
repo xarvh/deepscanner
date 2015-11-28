@@ -4,8 +4,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
-#include "io.h"
+#include "pngio.h"
 
 // PROTOTYPES for newton.cc
 int newtonNearestZero(double r, double i, double alpha);
@@ -22,6 +23,7 @@ static double mainCtI = 0.;
 static double mainSize = 1.;
 static unsigned mainPSize = 100;
 
+static pngT* png;
 
 
 /*=============================================================================
@@ -140,47 +142,21 @@ void display(double cr, double ci, double size, int screen_size)
 	double r = r0 + x*m;
 
 	deepScan(r, i, size/screen_size, a, &R, &G, &B);
-	ioScreenPutPixel(x, y, R, G, B);
+
+    rgbaT* pixel = png->p + x + y*mainPSize;
+    pixel->r = R;
+    pixel->g = G;
+    pixel->b = B;
     }
 }
-
-
-
-
-
-
-
 
 
 
 /*=============================================================================
  * LOOP
  */
-int mainLoop()
-{
- char name[256];
-
- display(mainCtR, mainCtI, mainSize, mainPSize);
-
- sprintf(name, "alpha=%.2e center=(%.2e,%.2e) size=%.2e", mainAlpha, mainCtR, mainCtI, mainSize);
- ioScreenName(name);
-}
-
-
-
-
-void endprint()
-{
- printf("\nTo obtain the last picture with a different resolution,\n");
- printf("copy and paste these values after the new [size] parameter:\n");
- printf("  %.4e %.4e %.4e %.4e\n", mainAlpha, mainCtR, mainCtI, mainSize);
-}
-
-
 int main(int argc, char **argv)
 {
- int m;
-
  if(argc > 1) mainPSize = atoi(argv[1]);
 
  if(argc > 2) mainAlpha = atof(argv[2]);
@@ -188,13 +164,16 @@ int main(int argc, char **argv)
  if(argc > 4) mainCtI = atof(argv[4]);
  if(argc > 5) mainSize = atof(argv[5]);
 
- m = 600/mainPSize;
+ int m = 600/mainPSize;
  if(m < 1) m = 1;
 
- if(ioScreenMemory(mainPSize, mainPSize, m)) return -1;
+ png = pngEmpty(mainPSize, mainPSize);
 
- mainLoop();
- ioScreenShot();
+ display(mainCtR, mainCtI, mainSize, mainPSize);
+
+ char name[200];
+ sprintf(name, "render_%.4e_%.4e_%.4e_%.4e.png", mainAlpha, mainCtR, mainCtI, mainSize);
+ pngSave(name, png);
 }
 
 

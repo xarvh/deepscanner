@@ -1,11 +1,11 @@
 
 OUT_DS = deepscanner
 OUT_CE = chaosexplorer
-CFILES_DS = deepscanner.c io.c newton.cc
+CFILES_DS = deepscanner.c io.c newton.cc pngio.cc
 CFILES_CE = chaosexplorer.c io.c newton.cc
 
 CFLAGS = -O3 -s `sdl-config --cflags`
-LIBS = `sdl-config --libs`
+LIBS = `sdl-config --libs` -lz -lpng
 
 all: $(OUT_DS) $(OUT_CE)
 
