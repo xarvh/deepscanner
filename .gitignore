@@ -1,7 +1,9 @@
 chaosexplorer
 deepscanner
+deepmapper
 *.bmp
 *.png
+*.data
 
 # Object files
 *.o

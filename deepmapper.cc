@@ -2,10 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <complex>
-#define COMPLEX std::complex<double>
-
-
-static double distanceThreshold = 0.001;
+#define Complex std::complex<double>
 
 
 /*=============================================================================
@@ -21,14 +18,13 @@ static double distanceThreshold = 0.001;
  *   = ------------------- = -------------------
  *       3z^2 + 4z + a+1       (3z + 4)z + a+1
  */
-COMPLEX nextOrbit(COMPLEX z, double a)
+Complex nextOrbit(Complex z, double a)
 {
- COMPLEX n = 2.*(z+1.)*z*z - a;
- COMPLEX d = (3.*z + 4.)*z + a+1.;
+ Complex n = 2.*(z+1.)*z*z - a;
+ Complex d = (3.*z + 4.)*z + a+1.;
 
  return n / d;
 }
-
 
 
 /*=============================================================================
@@ -37,25 +33,25 @@ COMPLEX nextOrbit(COMPLEX z, double a)
  * Searches for the first zero that gets close enough to the orbit.
  */
 void nearestZero(double r, double i, double alpha, int* orbitLength, int* closestZeroId) {
-    double squaredDistanceThreshold = distanceThreshold * distanceThreshold;
+    double squaredDistanceThreshold = 0.001 * 0.001;
 
-    COMPLEX zeroA[3];
+    Complex zeroA[3];
 
     // compute the zeros, solutions of
     // z^3 + 2z^2 + (a+1)z + a
-    COMPLEX f = alpha;
+    Complex f = alpha;
     f = sqrt(1. - 4. * f);
     zeroA[0] = -1.;		// first zero, always (-1, 0)
     zeroA[1] = -(1. + f) / 2.;	// second zero
     zeroA[2] = -(1. - f) / 2.;	// third zero
 
     // iterate 'z' along the orbit:
-    COMPLEX z(r, i);
+    Complex z(r, i);
     for(int i = 255; i >= 0; i--) {
 
          // if one of the zeros is close enough, store the iteration count and return the zero id.
          for(int id = 0; id < 3; id++) {
-         	  COMPLEX delta = z - zeroA[id];
+         	  Complex delta = z - zeroA[id];
          	  if(delta.real()*delta.real() + delta.imag()*delta.imag() < squaredDistanceThreshold) {
          	  	  *orbitLength = i;
                   *closestZeroId = id;
@@ -86,8 +82,7 @@ void display(FILE* out, double cr, double ci, double size, double alpha, int ras
 
             int closestZeroId;
             int orbitLength;
-            nearestZero(r, i, alpha, &orbitLength, &closestZeroId);
-            printf("%d %d\n", orbitLength, closestZeroId);
+            nearestZero(i, r, alpha, &orbitLength, &closestZeroId);
 
             unsigned char R = 0, G = 0, B = 0;
             switch(closestZeroId) {
@@ -115,7 +110,7 @@ int main(int argc, char **argv) {
     double centerI = -8.7978e-02;
     double sizeRI = 1.1000e-04;
 
-    unsigned rasterSize = 100;
+    unsigned rasterSize = 350;
 
     if(argc > 1) rasterSize = atoi(argv[1]);
 
@@ -125,7 +120,7 @@ int main(int argc, char **argv) {
     if(argc > 5) sizeRI = atof(argv[5]);
 
     char name[200];
-    sprintf(name, "map %.4e %.4e %.4e %.4e s %d.map", alphaConstant, centerR, centerI, sizeRI, rasterSize);
+    sprintf(name, "map %.4e %.4e %.4e %.4e %d.data", alphaConstant, centerR, centerI, sizeRI, rasterSize);
 
     FILE* out = fopen(name, "wb");
     display(out, centerR, centerI, sizeRI, alphaConstant, rasterSize);
