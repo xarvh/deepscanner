@@ -9,7 +9,7 @@ CFILES_DM = deepmapper.cc
 CFLAGS = -O3 -s
 LIBS = `sdl-config --libs` -lz -lpng
 
-all: $(OUT_DS) $(OUT_CE) $(OUT_DM)
+all: $(OUT_DS) $(OUT_CE) $(OUT_DM) stats
 
 $(OUT_DS): $(CFILES_DS)
 	$(CXX) $(CFLAGS) $(CFILES_DS) $(LIBS) -o $(OUT_DS)
@@ -19,3 +19,6 @@ $(OUT_CE): $(CFILES_CE)
 
 $(OUT_DM): $(CFILES_DM)
 	$(CXX) $(CFLAGS) $(CFILES_DM) -o $(OUT_DM)
+
+stats: stats.c
+	$(CC) stats.c -o stats -std=c99
