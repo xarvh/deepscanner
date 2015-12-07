@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 typedef struct {
@@ -20,22 +21,22 @@ typedef struct {
 
 Map maps[3] = {
     {
+        {112,  37, 255 },
+        {156, 146, 255 }
+    },
+    {
         {255,   0,  99 },
         {255, 154,  99 }
     },
     {
         {  7, 162, 255 },
         {101, 255, 255 }
-    },
-    {
-        {112,  37, 255 },
-        {156, 146, 255 }
     }
 };
 
 
-int mmax = 0;
-int mmin = 9999999;
+double mmax = 0;
+double mmin = 9999999;
 
 
 void pixelTransform(Pixel* p, Pixel minInput, Pixel maxInput) {
@@ -43,6 +44,8 @@ void pixelTransform(Pixel* p, Pixel minInput, Pixel maxInput) {
     int zeroId = 0;
     while (!p->a[zeroId]) zeroId++;
     // TODO detect black pixel!
+
+    //if (zeroId != 1) return;
 
     double normalizedInputValue = (p->a[zeroId] - minInput.a[zeroId]) / (double)(maxInput.a[zeroId] - minInput.a[zeroId]);
     Map map = maps[zeroId];
@@ -54,9 +57,6 @@ void pixelTransform(Pixel* p, Pixel minInput, Pixel maxInput) {
 
         int v = minComponentOutput + (int)((maxComponentOutput - minComponentOutput) * normalizedInputValue);
         p->a[i] = v;
-
-        if (mmax < v) mmax = v;
-        if (mmin > v) mmin = v;
     }
 }
 
@@ -82,9 +82,11 @@ int main(int argc, char** argv) {
         }
     }
 
+    /*
     for (int i = 0; i < 3; i++) {
         printf("%d %d\n", min.a[i], max.a[i]);
     }
+    */
 
     rewind(in);
     FILE* out = fopen(argv[2], "wb");
@@ -97,6 +99,5 @@ int main(int argc, char** argv) {
 
     fclose(in);
     fclose(out);
-    printf("---- %d %d\n", mmin, mmax);
     return 0;
 }
