@@ -1,4 +1,4 @@
-all: deepscanner stats
+all: deepscanner stats colorise
 
 %: %.cc
-	$(CXX) -O3 $< -o $@
+	$(CXX) $< -o $@
