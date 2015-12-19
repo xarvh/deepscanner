@@ -1,4 +1,4 @@
-all: deepscanner stats colorise
+all: deepscanner stats maximiseSpread colorise
 
 %: %.cc
 	$(CXX) $< -o $@
