@@ -31,7 +31,7 @@ void maximiseSpread(unsigned long* map, unsigned long* count) {
 
     unsigned long partialTotal = 0;
     for (int i = 0; i < 256; i++) {
-        map[i] = 255 - (256 * partialTotal) / total;
+        map[i] = 255 - (255 * partialTotal) / total;
         partialTotal += count[i];
     }
 }
