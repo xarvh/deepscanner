@@ -33,7 +33,7 @@ Complex nextOrbit(Complex z, double a)
  * Searches for the first zero that gets close enough to the orbit.
  */
 void nearestZero(double r, double i, double alpha, int* orbitLength, int* closestZeroId) {
-    double distanceThreshold = 1e-13;
+    double distanceThreshold = 1e-11;
     double squaredDistanceThreshold = distanceThreshold * distanceThreshold;
 
     Complex zeroA[3];
