@@ -3,6 +3,7 @@ deepscanner
 deepmapper
 stats
 maximiseSpread
+colorise
 *.bmp
 *.png
 *.data

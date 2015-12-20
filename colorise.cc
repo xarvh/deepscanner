@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 
 typedef struct {
@@ -12,87 +13,52 @@ typedef struct {
 } Pixel;
 
 
-typedef struct {
-    Pixel min;
-    Pixel max;
-} Map;
 
-
-
-Map maps[3] = {
-    {
-        {112,  37, 255 },
-        {156, 146, 255 }
-    },
-    {
-        {255,   0,  99 },
-        {255, 154,  99 }
-    },
-    {
-        {  7, 162, 255 },
-        {101, 255, 255 }
-    }
-};
-
-
-double mmax = 0;
-double mmin = 9999999;
-
-
-void pixelTransform(Pixel* p, Pixel minInput, Pixel maxInput) {
-
-    int zeroId = 0;
-    while (!p->a[zeroId]) zeroId++;
-    // TODO detect black pixel!
-
-    //if (zeroId != 1) return;
-
-    double normalizedInputValue = (p->a[zeroId] - minInput.a[zeroId]) / (double)(maxInput.a[zeroId] - minInput.a[zeroId]);
-    Map map = maps[zeroId];
-
-    for (int i = 0; i < 3; i++) {
-
-        int minComponentOutput = map.min.a[i];
-        int maxComponentOutput = map.max.a[i];
-
-        int v = minComponentOutput + (int)((maxComponentOutput - minComponentOutput) * normalizedInputValue);
-        p->a[i] = v;
-    }
+Pixel firstZeroColorScale(int value) {
+    Pixel p = {255, 255, 255};
+    return p;
 }
 
 
+Pixel secondZeroColorScale(int value) {
+    Pixel p = {0, 0, 0};
 
+    p.r = value * value * value / (255 * 255);
+
+    return p;
+}
+
+
+Pixel thirdZeroColorScale(int value) {
+    Pixel p = {255, 255, 255};
+    return p;
+}
 
 
 int main(int argc, char** argv) {
 
     int bufferSize = 1024*1024;
-
-    Pixel max = {0, 0, 0};
-    Pixel min = {255, 255, 255};
+    Pixel bf[bufferSize];
 
     FILE* in = fopen(argv[1], "rb");
-    Pixel bf[bufferSize];
-    while (int r = fread(bf, sizeof(Pixel), bufferSize, in)) {
-        for (Pixel* p = bf; p - bf < r; p++) {
-            for (int i = 0; i < 3; i++) {
-                if (p->a[i] && p->a[i] > max.a[i]) max.a[i] = p->a[i];
-                if (p->a[i] && p->a[i] < min.a[i]) min.a[i] = p->a[i];
-            }
-        }
-    }
-
-    /*
-    for (int i = 0; i < 3; i++) {
-        printf("%d %d\n", min.a[i], max.a[i]);
-    }
-    */
-
-    rewind(in);
     FILE* out = fopen(argv[2], "wb");
     while (int r = fread(bf, sizeof(Pixel), bufferSize, in)) {
         for (Pixel* p = bf; p - bf < r; p++) {
-            pixelTransform(p, min, max);
+            /*
+            Pixel black = {0, 0, 0}, white = {255, 255, 255}, red = {255, 0, 0};
+            int x = 0;
+            if (p->r) x++;
+            if (p->g) x++;
+            if (p->b) x++;
+
+            if (x == 0) *p = black;
+            else if (x == 1) *p = white;
+            else *p = red;
+            */
+
+            if (p->r) *p = firstZeroColorScale(p->r);
+            else if (p->g) *p = secondZeroColorScale(p->g);
+            else if (p->b) *p = thirdZeroColorScale(p->b);
         }
         fwrite(bf, sizeof(Pixel), r, out);
     }
