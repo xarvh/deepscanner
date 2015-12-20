@@ -31,7 +31,7 @@ void maximiseSpread(unsigned long* map, unsigned long* count) {
 
     unsigned long partialTotal = 0;
     for (int i = 0; i < 256; i++) {
-        map[i] = (256 * partialTotal) / total;
+        map[i] = 255 - (256 * partialTotal) / total;
         partialTotal += count[i];
     }
 }
@@ -55,8 +55,8 @@ int main(int argc, char** argv) {
     while (r = fread(bf, sizeof(Pixel), bufferSize, in)) {
         for (Pixel* p = bf; p - bf < r; p++) {
             if (!p->g && !p->b) count.r[p->r]++;
-            if (!p->r && !p->b) count.g[p->g]++;
-            if (!p->r && !p->g) count.b[p->b]++;
+            else if (!p->r && !p->b) count.g[p->g]++;
+            else if (!p->r && !p->g) count.b[p->b]++;
         }
     }
 
@@ -75,9 +75,9 @@ int main(int argc, char** argv) {
     rewind(in);
     while (r = fread(bf, sizeof(Pixel), bufferSize, in)) {
         for (Pixel* p = bf; p - bf < r; p++) {
-            p->r = map.r[p->r];
-            p->g = map.g[p->g];
-            p->b = map.b[p->b];
+            if (!p->g && !p->b) p->r = map.r[p->r];
+            else if (!p->r && !p->b) p->g = map.g[p->g];
+            else if (!p->r && !p->g) p->b = map.b[p->b];
         }
         fwrite(bf, sizeof(Pixel), bufferSize, out);
     }
