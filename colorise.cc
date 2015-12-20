@@ -23,7 +23,7 @@ Pixel firstZeroColorScale(int value) {
 Pixel secondZeroColorScale(int value) {
     Pixel p = {0, 0, 0};
 
-    p.r = value * value * value / (255 * 255);
+    p.r = pow(2, 8 * (value / 256.));
 
     return p;
 }
