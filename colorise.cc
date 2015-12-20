@@ -25,6 +25,12 @@ Pixel secondZeroColorScale(int value) {
 
     p.r = pow(2, 8 * (value / 256.));
 
+    if (p.r < 4) {
+        p.r = 0;
+        p.g = 88;
+        p.b = 255;
+    }
+
     return p;
 }
 
