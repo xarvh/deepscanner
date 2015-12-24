@@ -23,6 +23,12 @@ Pixel white(int value) {
 }
 
 
+Pixel black(int value) {
+    Pixel p = {0, 0, 0};
+    return p;
+}
+
+
 Pixel StockholmRed(int value) {
     Pixel p = {0, 0, 0};
 
@@ -38,10 +44,31 @@ Pixel StockholmRed(int value) {
 }
 
 
+Pixel fiery(int value) {
+    Pixel p = {0, 0, 0};
+
+    value = pow(2, 8 * (value / 256.));
+    int dt = 256 / 3;
+
+    int level = value / dt;
+    int shade = (value - dt*level) * 3;
+
+    switch (level) {
+        case 0: p.r = shade; break;
+        case 1: p.r = 255; p.g = shade; break;
+        default: p.r = p.g = 255; p.b = shade; break;
+    }
+
+    return p;
+}
+
+
 typedef Pixel (* Transform)(int);
 Transform transforms[] = {
     white,
-    StockholmRed
+    black,
+    StockholmRed,
+    fiery
 };
 
 
