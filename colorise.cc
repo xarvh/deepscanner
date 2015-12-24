@@ -29,6 +29,7 @@ Pixel black(int value) {
 }
 
 
+// 2
 Pixel StockholmRed(int value) {
     Pixel p = {0, 0, 0};
 
@@ -44,6 +45,7 @@ Pixel StockholmRed(int value) {
 }
 
 
+// 3
 Pixel fiery(int value) {
     Pixel p = {0, 0, 0};
 
@@ -63,12 +65,39 @@ Pixel fiery(int value) {
 }
 
 
+// 4
+Pixel crayonOrange(int value) {
+    Pixel p = {255, 0, 99};
+    p.g = value / 2;
+    return p;
+}
+
+// 5
+Pixel crayonAzure(int value) {
+    Pixel p = {0, 0, 255};
+    p.r = value / 3;
+    p.g = 128 + value / 2;
+    return p;
+}
+
+// 6
+Pixel crayonPurple(int value) {
+    Pixel p = {0, 0, 255};
+    p.r = 112 + value / 7;
+    p.g = 37 + value / 2;
+    return p;
+}
+
+// --
 typedef Pixel (* Transform)(int);
 Transform transforms[] = {
     white,
     black,
     StockholmRed,
-    fiery
+    fiery,
+    crayonOrange,
+    crayonAzure,
+    crayonPurple,
 };
 
 
