@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
             else if (!p->r && !p->b) p->g = map.g[p->g];
             else if (!p->r && !p->g) p->b = map.b[p->b];
         }
-        fwrite(bf, sizeof(Pixel), bufferSize, out);
+        fwrite(bf, sizeof(Pixel), r, out);
     }
 
     fclose(in);
