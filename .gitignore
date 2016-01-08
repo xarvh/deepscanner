@@ -4,6 +4,7 @@ deepmapper
 stats
 maximiseSpread
 colorise
+antialias
 *.bmp
 *.png
 *.data
