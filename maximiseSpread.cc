@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
 
     // output
     char fn[256];
-    sprintf(fn, "maxed%s", argv[1]);
+    sprintf(fn, "max.%s", argv[1]);
     FILE* out = fopen(fn, "wb");
 
     rewind(in);

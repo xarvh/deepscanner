@@ -109,17 +109,26 @@ int main(int argc, char** argv) {
     int bufferSize = 1024*1024;
     Pixel bf[bufferSize];
 
-    if (argc < 6) {
-        fprintf(stderr, "%s RedTransform BlueTransform GreenTransform inutFile outputFile\n", argv[0]);
+    if (argc < 5) {
+        fprintf(stderr, "%s RedTransform BlueTransform GreenTransform inutFile\n", argv[0]);
         return -1;
     }
 
-    Transform rt = transforms[atoi(argv[1])];
-    Transform gt = transforms[atoi(argv[2])];
-    Transform bt = transforms[atoi(argv[3])];
+    int ri = atoi(argv[1]);
+    int gi = atoi(argv[2]);
+    int bi = atoi(argv[3]);
+    char* inFn = argv[4];
 
-    FILE* in = fopen(argv[4], "rb");
-    FILE* out = fopen(argv[5], "wb");
+    FILE* in = fopen(inFn, "rb");
+
+    char outFn[200];
+    sprintf(outFn, "co%d %d %d.%s", ri, gi, bi, inFn);
+    FILE* out = fopen(outFn, "wb");
+
+    Transform rt = transforms[ri];
+    Transform gt = transforms[gi];
+    Transform bt = transforms[bi];
+
     while (int r = fread(bf, sizeof(Pixel), bufferSize, in)) {
         for (Pixel* p = bf; p - bf < r; p++) {
             if (p->r) *p = rt(p->r);
